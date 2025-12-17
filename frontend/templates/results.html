@@ -24,9 +24,24 @@
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
             <a class="navbar-brand" href="/">
-                <i class="bi bi-robot me-2"></i>HR Match AI
+                <i class="bi bi-robot me-2"></i>HR Assistant
             </a>
-            <a href="/" class="btn btn-sm btn-outline-dark rounded-pill px-3">New Analysis</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item ms-lg-3">
+                        <a href="/" class="btn btn-sm btn-primary-gradient rounded-pill px-4">New Analysis</a>
+                    </li>
+                </ul>
+            </div>
         </div>
     </nav>
 
@@ -194,6 +209,129 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Missing Skills Section -->
+                    {% if results.skills.missing %}
+                    <h5 class="fw-bold mt-5 mb-4"><i
+                            class="bi bi-exclamation-triangle-fill me-2 text-danger"></i>Missing Skills</h5>
+                    <div class="p-4 rounded-4"
+                        style="background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.2);">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="icon-square bg-danger-subtle text-danger rounded-3 me-2 p-1"><i
+                                    class="bi bi-clipboard-x-fill"></i></div>
+                            <h6 class="fw-bold mb-0 text-danger-emphasis">Skills Gap Analysis</h6>
+                            <span class="badge bg-danger ms-auto">{{ results.skills.missing|length }} Missing</span>
+                        </div>
+                        <p class="text-muted small mb-4">The following skills are required in the Job Description but
+                            were not found in the candidate's CV:</p>
+
+                        <div class="row g-3">
+                            <!-- Missing Technical Skills -->
+                            {% set missing_tech = [] %}
+                            {% for skill in results.skills.missing %}
+                            {% if skill in results.skills.jd_categorized.technical %}
+                            {% set _ = missing_tech.append(skill) %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if missing_tech %}
+                            <div class="col-md-4">
+                                <div class="p-3 bg-white rounded-3 border border-danger border-opacity-25 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-cpu text-danger me-2"></i>
+                                        <small class="text-danger fw-bold text-uppercase">Technical</small>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for skill in missing_tech %}
+                                        <span
+                                            class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2 py-1 small">
+                                            <i class="bi bi-x-circle me-1"></i>{{ skill }}
+                                        </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Missing Soft Skills -->
+                            {% set missing_soft = [] %}
+                            {% for skill in results.skills.missing %}
+                            {% if skill in results.skills.jd_categorized.soft %}
+                            {% set _ = missing_soft.append(skill) %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if missing_soft %}
+                            <div class="col-md-4">
+                                <div class="p-3 bg-white rounded-3 border border-danger border-opacity-25 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-people text-danger me-2"></i>
+                                        <small class="text-danger fw-bold text-uppercase">Soft Skills</small>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for skill in missing_soft %}
+                                        <span
+                                            class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2 py-1 small">
+                                            <i class="bi bi-x-circle me-1"></i>{{ skill }}
+                                        </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+
+                            <!-- Missing Tools -->
+                            {% set missing_tools = [] %}
+                            {% for skill in results.skills.missing %}
+                            {% if skill in results.skills.jd_categorized.tools %}
+                            {% set _ = missing_tools.append(skill) %}
+                            {% endif %}
+                            {% endfor %}
+                            {% if missing_tools %}
+                            <div class="col-md-4">
+                                <div class="p-3 bg-white rounded-3 border border-danger border-opacity-25 h-100">
+                                    <div class="d-flex align-items-center mb-2">
+                                        <i class="bi bi-tools text-danger me-2"></i>
+                                        <small class="text-danger fw-bold text-uppercase">Tools</small>
+                                    </div>
+                                    <div class="d-flex flex-wrap gap-1">
+                                        {% for skill in missing_tools %}
+                                        <span
+                                            class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 rounded-pill px-2 py-1 small">
+                                            <i class="bi bi-x-circle me-1"></i>{{ skill }}
+                                        </span>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Recommendation Box -->
+                        <div class="mt-4 p-3 rounded-3" style="background: rgba(239, 68, 68, 0.08);">
+                            <div class="d-flex align-items-start">
+                                <i class="bi bi-lightbulb-fill text-warning me-2 mt-1"></i>
+                                <div>
+                                    <strong class="text-dark small">Recommendation:</strong>
+                                    <p class="text-muted small mb-0 mt-1">
+                                        {% if results.skills.missing|length <= 3 %} This candidate has minor skill gaps.
+                                            Consider providing training or on-the-job learning opportunities. {% elif
+                                            results.skills.missing|length <=6 %} This candidate has moderate skill gaps.
+                                            Evaluate if these skills can be developed within a reasonable timeframe. {%
+                                            else %} This candidate has significant skill gaps. Consider if a more
+                                            suitable candidate is available or if extensive training is feasible. {%
+                                            endif %} </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="alert alert-success mt-5 d-flex align-items-center" role="alert">
+                        <i class="bi bi-check-circle-fill me-2"></i>
+                        <div>
+                            <strong>Great match!</strong> The candidate has all the skills mentioned in the job
+                            description.
+                        </div>
+                    </div>
+                    {% endif %}
 
                 </div>
             </div>

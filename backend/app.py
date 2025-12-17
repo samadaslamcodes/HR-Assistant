@@ -75,6 +75,10 @@ def upload_file():
             
     return render_template('upload.html')
 
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
 @app.route('/api/match', methods=['POST'])
 def api_match():
     if 'cv' not in request.files or 'jd' not in request.files:
@@ -96,4 +100,7 @@ def api_match():
         return jsonify({"error": "Invalid file type"}), 400
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5001)
+    import os
+    port = int(os.environ.get('PORT', 5001))
+    debug = os.environ.get('FLASK_ENV', 'development') == 'development'
+    app.run(debug=debug, host='0.0.0.0', port=port)

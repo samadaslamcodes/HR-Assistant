@@ -1,45 +1,59 @@
-# HR CV-JD Match Assistant
+# HR Assistant
 
-An AI-powered recruitment tool designed to parse CVs and Job Descriptions, identifying key skills, qualifications, and experience level to compute a compatibility match.
+**HR Assistant** is an intelligent, AI-powered tool designed to streamline the recruitment process. It automatically analyzes resumes (CVs) against Job Descriptions (JDs) using Natural Language Processing (NLP) to provide a weighted compatibility score and actionable insights.
 
-## Project Features (Mapped to Requirements)
-1.  **Input Support**: Accepts **PDF, DOCX, and TXT** files for both CVs and JDs.
-2.  **Extraction**: Automatically extracts **Skills** (Technical, Soft, Tools), **Experience Level** (Junior/Mid/Senior), and **Qualifications** (Degrees).
-3.  **Matching Engine**: Hybrid algorithm using **TF-IDF**, **Semantic Vectors**, and **Skill Overlap** to generate a precise match score.
-4.  **Insights**: Highlights **Matched vs. Missing Skills** and provides a detailed gap analysis.
-5.  **Minimal & Modern**: Simple, intuitive "Glassmorphism" UI for instant results.
+## 🚀 Features
+*   **AI Semantic Matching:** Uses SpaCy to understand context, not just keywords.
+*   **Multi-Format Support:** Works with PDF, DOCX, and TXT files.
+*   **Detailed Analytics:** Breakdown of Match Score, Missing Skills, and Experience Level.
+*   **Modern UI:** Clean, Glassmorphism-based design for a premium user experience.
+*   **Privacy Focused:** Runs locally on your machine; no data is uploaded to the cloud.
 
-## Setup
-1.  **Install Dependencies**:
+## 🛠️ Tech Stack
+*   **Backend:** Python, Flask
+*   **AI/NLP:** SpaCy, Scikit-Learn (TF-IDF), NumPy
+*   **File Parsing:** PDFPlumber, Python-Docx
+*   **Frontend:** HTML5, CSS3 (Glassmorphism), JavaScript, Chart.js
+
+## 📦 Installation & Setup
+
+1.  **Clone the Repository**
+    ```bash
+    git clone https://github.com/samadaslamcodes/Hr-Assistant.git
+    cd "Hr Assistant"
+    ```
+
+2.  **Install Dependencies**
     ```bash
     pip install -r requirements.txt
     ```
-2.  **Download AI Model**:
+
+3.  **Download NLP Model**
     ```bash
     python -m spacy download en_core_web_md
     ```
 
-## How to Run
-1.  Navigate to the backend directory:
+4.  **Run the Application**
     ```bash
     cd backend
-    ```
-2.  Start the server:
-    ```bash
     python app.py
     ```
-3.  Open your browser and visit: `http://127.0.0.1:5001`
+    The app will start at `http://127.0.0.1:5001`.
 
-## Example Input / Output
+## 📂 Project Structure
+```
+Hr Assistant/
+├── backend/
+│   ├── app.py           # Main Flask Server
+│   ├── match.py         # Core Matching Logic
+├── frontend/
+│   ├── static/          # CSS, Images
+│   ├── templates/       # HTML files (upload, results, about)
+├── uploads/             # Temp storage for processing
+├── requirements.txt     # Python Dependencies
+└── README.md            # Project Documentation
+```
 
-I have provided sample files in the `data/samples/` directory for testing:
-
-### 1. High Match Scenario (~85%+)
-*   **Files**: `data/samples/high_match_cv.pdf` + `data/samples/high_match_jd.pdf`
-*   **Scenario**: Senior Backend Engineer matching a Senior Backend JD exactly.
-*   **Expected Result**: **High Match** (Green Badge) with "High" Experience Level and mostly "Matched Skills".
-
-### 2. Low Match Scenario (<40%)
-*   **Files**: `data/samples/low_match_cv.pdf` + `data/samples/low_match_jd.pdf`
-*   **Scenario**: Graphic Designer applying for a Backend Engineering role.
-*   **Expected Result**: **Low Match** (Red Badge) with "Missing Skills" highlighted (e.g., Python, AWS missing).
+## 📝 Example
+*   **Input:** Check a "Junior Python Developer" CV against a "Senior Data Scientist" JD.
+*   **Output:** Likely a **Low Score** (< 40%). The system will flag missing "Data Science", "Machine Learning", and "Senior Experience" tags.
