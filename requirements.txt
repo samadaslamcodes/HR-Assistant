@@ -1,0 +1,9 @@
+scikit-learn
+numpy
+pdfplumber
+python-docx
+Flask
+werkzeug
+spacy
+reportlab
+gunicorn
