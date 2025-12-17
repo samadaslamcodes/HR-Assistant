@@ -56,24 +56,36 @@ def process_match(cv_file, jd_file):
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
     if request.method == 'POST':
+        print("DEBUG: Upload request received")
         if 'cv' not in request.files or 'jd' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
+            return render_template('upload.html', error='Missing file parts')
         
         cv = request.files['cv']
         jd = request.files['jd']
         
+        print(f"DEBUG: CV={cv.filename}, JD={jd.filename}")
+
         if cv.filename == '' or jd.filename == '':
-            flash('No selected file')
-            return redirect(request.url)
+            return render_template('upload.html', error='Please select both files')
             
-            if "error" in results:
-                # Pass error directly to template instead of redirecting
-                return render_template('upload.html', error=results["error"])
+        if cv and allowed_file(cv.filename) and jd and allowed_file(jd.filename):
+            try:
+                print("DEBUG: Processing match...")
+                results = process_match(cv, jd)
+                print("DEBUG: Match processed successfully")
                 
-            return render_template('results.html', results=results)
+                # Check for explicit errors returned by process_match
+                if isinstance(results, dict) and "error" in results:
+                     return render_template('upload.html', error=results["error"])
+
+                return render_template('results.html', results=results)
+            except Exception as e:
+                import traceback
+                traceback.print_exc()
+                print(f"ERROR: {e}")
+                return render_template('upload.html', error=f"An error occurred during analysis: {str(e)}")
         else:
-            return render_template('upload.html', error='Allowed file types are .txt, .pdf, .docx')
+            return render_template('upload.html', error='Invalid file type. Allowed: .txt, .pdf, .docx')
             
     return render_template('upload.html')
 
