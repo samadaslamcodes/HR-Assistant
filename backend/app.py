@@ -76,17 +76,13 @@ def upload_file():
             flash('No selected file')
             return redirect(request.url)
             
-        if cv and allowed_file(cv.filename) and jd and allowed_file(jd.filename):
-            results = process_match(cv, jd)
-            
             if "error" in results:
-                flash(results["error"])
-                return redirect(request.url)
+                # Pass error directly to template instead of redirecting
+                return render_template('upload.html', error=results["error"])
                 
             return render_template('results.html', results=results)
         else:
-            flash('Allowed file types are .txt, .pdf, .docx')
-            return redirect(request.url)
+            return render_template('upload.html', error='Allowed file types are .txt, .pdf, .docx')
             
     return render_template('upload.html')
 
