@@ -42,14 +42,16 @@ def process_match(cv_file, jd_file):
         cv_text = read_file(cv_path)
         jd_text = read_file(jd_path)
         
-        # content validation
+        # content validation (check but don't block for now)
         is_cv_valid, cv_msg = validate_text_content(cv_text, "cv")
         if not is_cv_valid:
-            return {"error": f"CV Error: {cv_msg}"}
+            print(f"Validation Warning (CV): {cv_msg}")
+            # return {"error": f"CV Error: {cv_msg}"}  <-- DISABLED BLOCKING
 
         is_jd_valid, jd_msg = validate_text_content(jd_text, "jd")
         if not is_jd_valid:
-            return {"error": f"JD Error: {jd_msg}"}
+            print(f"Validation Warning (JD): {jd_msg}")
+            # return {"error": f"JD Error: {jd_msg}"}  <-- DISABLED BLOCKING
         
         results = calculate_cv_jd_match(cv_text, jd_text)
         return results
