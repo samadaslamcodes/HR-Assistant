@@ -218,7 +218,23 @@ def calculate_cv_jd_match(cv_text, jd_text):
     5. Education Match
     """
     if not cv_text or not jd_text:
-        return {"match_percentage": 0, "details": "Empty text"}
+        # Return a safe empty structure so the template doesn't crash
+        return {
+            "match_percentage": 0,
+            "confidence_score": 0,
+            "semantic_score": 0,
+            "tfidf_score": 0,
+            "skill_match_score": 0,
+            "experience_level": {"cv": "Unknown", "jd": "Unknown"},
+            "education": {"cv": ["Not Detected"], "jd": ["Not Specified"]},
+            "skills": {
+                "matched": [],
+                "missing": [],
+                "cv_categorized": {},
+                "jd_categorized": {}
+            },
+            "details": "Could not read text from files."
+        }
 
     # 1. Experience Level
     cv_exp = detect_experience_level(cv_text)

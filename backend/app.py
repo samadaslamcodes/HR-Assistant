@@ -83,7 +83,25 @@ def upload_file():
                 import traceback
                 traceback.print_exc()
                 print(f"ERROR: {e}")
-                return render_template('upload.html', error=f"An error occurred during analysis: {str(e)}")
+                
+                # FALLBACK: If anything crashes, show a 0% result page instead of an error
+                fallback_result = {
+                    "match_percentage": 0,
+                    "confidence_score": 0,
+                    "semantic_score": 0,
+                    "tfidf_score": 0,
+                    "skill_match_score": 0,
+                    "experience_level": {"cv": "Error", "jd": "Error"},
+                    "education": {"cv": [], "jd": []},
+                    "skills": {
+                        "matched": [],
+                        "missing": [],
+                        "cv_categorized": {},
+                        "jd_categorized": {}
+                    },
+                    "details": f"Analysis failed: {str(e)}"
+                }
+                return render_template('results.html', results=fallback_result)
         else:
             return render_template('upload.html', error='Invalid file type. Allowed: .txt, .pdf, .docx')
             
