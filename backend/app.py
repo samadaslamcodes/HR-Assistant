@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
-from match import read_file, calculate_cv_jd_match
+from match import read_file, calculate_cv_jd_match, validate_text_content
 
 # Adjust paths to point to frontend folder (sibling to backend)
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,19 +38,29 @@ def process_match(cv_file, jd_file):
     cv_file.save(cv_path)
     jd_file.save(jd_path)
     
-    cv_text = read_file(cv_path)
-    jd_text = read_file(jd_path)
-    
-    results = calculate_cv_jd_match(cv_text, jd_text)
-    
-    # Clean up files
     try:
-        os.remove(cv_path)
-        os.remove(jd_path)
-    except:
-        pass
+        cv_text = read_file(cv_path)
+        jd_text = read_file(jd_path)
         
-    return results
+        # content validation
+        is_cv_valid, cv_msg = validate_text_content(cv_text, "cv")
+        if not is_cv_valid:
+            return {"error": f"CV Error: {cv_msg}"}
+
+        is_jd_valid, jd_msg = validate_text_content(jd_text, "jd")
+        if not is_jd_valid:
+            return {"error": f"JD Error: {jd_msg}"}
+        
+        results = calculate_cv_jd_match(cv_text, jd_text)
+        return results
+        
+    finally:
+        # Clean up files regardless of success/fail
+        try:
+            if os.path.exists(cv_path): os.remove(cv_path)
+            if os.path.exists(jd_path): os.remove(jd_path)
+        except:
+            pass
 
 @app.route('/', methods=['GET', 'POST'])
 def upload_file():
@@ -68,6 +78,11 @@ def upload_file():
             
         if cv and allowed_file(cv.filename) and jd and allowed_file(jd.filename):
             results = process_match(cv, jd)
+            
+            if "error" in results:
+                flash(results["error"])
+                return redirect(request.url)
+                
             return render_template('results.html', results=results)
         else:
             flash('Allowed file types are .txt, .pdf, .docx')
@@ -93,6 +108,8 @@ def api_match():
     if cv and allowed_file(cv.filename) and jd and allowed_file(jd.filename):
         try:
             results = process_match(cv, jd)
+            if "error" in results:
+                return jsonify(results), 400
             return jsonify(results)
         except Exception as e:
             return jsonify({"error": str(e)}), 500

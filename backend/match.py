@@ -205,7 +205,41 @@ def calculate_education_match(cv_edu, jd_edu):
             match_found = True
             break
     
+    
     return 1.0 if match_found else 0.0
+
+def validate_text_content(text, doc_type="cv"):
+    """
+    Validates if the text content looks like a CV or a Job Description.
+    Returns (bool, str) -> (is_valid, reason)
+    """
+    text = text.lower()
+    
+    # Common words found in CVs
+    cv_keywords = [
+        "experience", "education", "skills", "summary", "projects", 
+        "certifications", "contact", "email", "phone", "resume", 
+        "curriculum vitae", "work history", "employment", "references",
+        "profile", "objective", "technical skills", "career"
+    ]
+    
+    # Common words found in JDs
+    jd_keywords = [
+        "job", "description", "responsibilities", "requirements", 
+        "qualification", "role", "duties", "skills", "experience", 
+        "candidate", "must have", "nice to have", "plus", "apply", 
+        "pay", "salary", "benefits", "looking for", "position"
+    ]
+    
+    keywords = cv_keywords if doc_type == "cv" else jd_keywords
+    
+    # Check for keyword matches (require at least 2 relevant keywords)
+    match_count = sum(1 for keyword in keywords if keyword in text)
+    
+    if match_count < 2:
+        return False, f"Content does not look like a {doc_type.upper()}. Missing key sections."
+        
+    return True, "Valid"
 
 def calculate_cv_jd_match(cv_text, jd_text):
     """
