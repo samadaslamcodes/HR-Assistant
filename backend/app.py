@@ -1,7 +1,7 @@
 import os
 from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
-from match import read_file, calculate_cv_jd_match, validate_text_content
+from match import read_file, calculate_cv_jd_match
 
 # Adjust paths to point to frontend folder (sibling to backend)
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -41,17 +41,6 @@ def process_match(cv_file, jd_file):
     try:
         cv_text = read_file(cv_path)
         jd_text = read_file(jd_path)
-        
-        # content validation (check but don't block for now)
-        is_cv_valid, cv_msg = validate_text_content(cv_text, "cv")
-        if not is_cv_valid:
-            print(f"Validation Warning (CV): {cv_msg}")
-            # return {"error": f"CV Error: {cv_msg}"}  <-- DISABLED BLOCKING
-
-        is_jd_valid, jd_msg = validate_text_content(jd_text, "jd")
-        if not is_jd_valid:
-            print(f"Validation Warning (JD): {jd_msg}")
-            # return {"error": f"JD Error: {jd_msg}"}  <-- DISABLED BLOCKING
         
         results = calculate_cv_jd_match(cv_text, jd_text)
         return results

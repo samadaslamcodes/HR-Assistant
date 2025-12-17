@@ -166,40 +166,8 @@
     </footer>
 
     <script>
-        // Function to check if filename looks like a CV
-        function looksLikeCV(filename) {
-            const lowerName = filename.toLowerCase();
-            const cvPatterns = ['cv', 'resume', 'curriculum', 'vitae', 'biodata', 'profile'];
-            return cvPatterns.some(pattern => lowerName.includes(pattern));
-        }
-
-        // Function to check if filename looks like a JD
-        function looksLikeJD(filename) {
-            const lowerName = filename.toLowerCase();
-            const jdPatterns = ['jd', 'job', 'description', 'position', 'requirement', 'vacancy', 'opening'];
-            return jdPatterns.some(pattern => lowerName.includes(pattern));
-        }
-
-        // Validate JD field for CV uploads
-        function validateJDUpload(file) {
-            if (looksLikeCV(file.name) && !looksLikeJD(file.name)) {
-                alert("⚠️ Warning: This file looks like a CV!\n\nPlease upload a Job Description file here, not a CV.\n\nThe CV should be uploaded in the 'Candidate CV' section on the left.");
-                return false;
-            }
-            return true;
-        }
-
-        // Validate CV field for JD uploads
-        function validateCVUpload(file) {
-            if (looksLikeJD(file.name) && !looksLikeCV(file.name)) {
-                alert("⚠️ Warning: This file looks like a Job Description!\n\nPlease upload a CV/Resume file here, not a Job Description.\n\nThe Job Description should be uploaded in the 'Job Description' section on the right.");
-                return false;
-            }
-            return true;
-        }
-
-        // Simple drag and drop handling with validation
-        function setupDragDrop(zoneId, inputId, nameId, validateFn) {
+        // Simple drag and drop handling
+        function setupDragDrop(zoneId, inputId, nameId) {
             const zone = document.getElementById(zoneId);
             const input = document.getElementById(inputId);
             const nameDisplay = document.getElementById(nameId);
@@ -217,34 +185,20 @@
                 e.preventDefault();
                 zone.classList.remove('dragover');
                 if (e.dataTransfer.files.length) {
-                    const file = e.dataTransfer.files[0];
-                    if (validateFn && !validateFn(file)) {
-                        // Clear the input if validation fails
-                        input.value = '';
-                        nameDisplay.textContent = '';
-                        return;
-                    }
                     input.files = e.dataTransfer.files;
-                    nameDisplay.textContent = "Selected: " + file.name;
+                    nameDisplay.textContent = "Selected: " + e.dataTransfer.files[0].name;
                 }
             });
 
             input.addEventListener('change', () => {
                 if (input.files.length) {
-                    const file = input.files[0];
-                    if (validateFn && !validateFn(file)) {
-                        // Clear the input if validation fails
-                        input.value = '';
-                        nameDisplay.textContent = '';
-                        return;
-                    }
-                    nameDisplay.textContent = "Selected: " + file.name;
+                    nameDisplay.textContent = "Selected: " + input.files[0].name;
                 }
             });
         }
 
-        setupDragDrop('cv-zone', 'cv', 'cv-name', validateCVUpload);
-        setupDragDrop('jd-zone', 'jd', 'jd-name', validateJDUpload);
+        setupDragDrop('cv-zone', 'cv', 'cv-name');
+        setupDragDrop('jd-zone', 'jd', 'jd-name');
 
         // Form Validation for Hidden Inputs
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
