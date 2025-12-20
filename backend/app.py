@@ -1,7 +1,8 @@
+from flask import Flask, render_template, request, redirect, url_for, flash, jsonify, send_from_directory
 import os
-from flask import Flask, render_template, request, redirect, url_for, flash, jsonify
 from werkzeug.utils import secure_filename
 from match import read_file, calculate_cv_jd_match
+from document_validator import validate_cv, validate_jd
 
 # Adjust paths to point to frontend folder (sibling to backend)
 base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -28,28 +29,50 @@ def allowed_file(filename):
     return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in app.config['ALLOWED_EXTENSIONS']
 
-def process_match(cv_file, jd_file):
-    cv_filename = secure_filename(cv_file.filename)
-    jd_filename = secure_filename(jd_file.filename)
-    
+def process_match(cv_file, jd_text_input=None, jd_file=None, cv_filename_override=None):
+    """Process a single CV against a JD (either text or file)."""
+    cv_filename = cv_filename_override or secure_filename(cv_file.filename)
     cv_path = os.path.join(app.config['UPLOAD_FOLDER'], cv_filename)
-    jd_path = os.path.join(app.config['UPLOAD_FOLDER'], jd_filename)
-    
     cv_file.save(cv_path)
-    jd_file.save(jd_path)
     
+    jd_path = None
     try:
+        # Read CV
         cv_text = read_file(cv_path)
-        jd_text = read_file(jd_path)
         
+        # Validate CV
+        is_valid_cv, cv_conf, cv_reason = validate_cv(cv_text)
+        if not is_valid_cv:
+            return {"error": f"Invalid CV: {cv_reason}"}
+        
+        # Get JD text (either from text input or file)
+        if jd_text_input:
+            jd_text = jd_text_input
+        elif jd_file:
+            jd_filename = secure_filename(jd_file.filename)
+            jd_path = os.path.join(app.config['UPLOAD_FOLDER'], jd_filename)
+            jd_file.save(jd_path)
+            jd_text = read_file(jd_path)
+        else:
+            return {"error": "No job description provided"}
+        
+        # Validate JD
+        is_valid_jd, jd_conf, jd_reason = validate_jd(jd_text)
+        if not is_valid_jd:
+            return {"error": f"Invalid Job Description: {jd_reason}"}
+        
+        # Calculate match
         results = calculate_cv_jd_match(cv_text, jd_text)
+        results['cv_filename'] = cv_file.filename
+        results['cv_internal_filename'] = cv_filename
         return results
         
     finally:
-        # Clean up files regardless of success/fail
+        # Clean up files
         try:
-            if os.path.exists(cv_path): os.remove(cv_path)
-            if os.path.exists(jd_path): os.remove(jd_path)
+            # We keep the CV for downloading in the results page
+            # if os.path.exists(cv_path): os.remove(cv_path) 
+            if jd_path and os.path.exists(jd_path): os.remove(jd_path)
         except:
             pass
 
@@ -57,59 +80,92 @@ def process_match(cv_file, jd_file):
 def upload_file():
     if request.method == 'POST':
         print("DEBUG: Upload request received")
-        if 'cv' not in request.files or 'jd' not in request.files:
-            return render_template('upload.html', error='Missing file parts')
         
-        cv = request.files['cv']
-        jd = request.files['jd']
+        # Check if JD is provided as text or file
+        jd_text_input = request.form.get('jd_text', '').strip()
+        jd_file = request.files.get('jd')
         
-        print(f"DEBUG: CV={cv.filename}, JD={jd.filename}")
-
-        if cv.filename == '' or jd.filename == '':
-            return render_template('upload.html', error='Please select both files')
+        # Check if jd_file is actually empty (no file selected)
+        jd_file_provided = jd_file and jd_file.filename != ''
+        
+        # Get CV files (can be multiple)
+        cv_files = request.files.getlist('cv')
+        
+        print(f"DEBUG: JD text length: {len(jd_text_input)}, JD file provided: {jd_file_provided}")
+        
+        # Validation - either JD text or JD file must be provided
+        if not cv_files or (not jd_text_input and not jd_file_provided):
+            return render_template('upload.html', error='Please provide CV(s) and Job Description')
+        
+        # Filter out empty CV files
+        cv_files = [f for f in cv_files if f.filename != '']
+        if not cv_files:
+            return render_template('upload.html', error='Please select at least one CV file')
+        
+        # JD text validation removed - allow any length
+        
+        # Validate file types
+        for cv_file in cv_files:
+            if not allowed_file(cv_file.filename):
+                return render_template('upload.html', error=f'Invalid CV file type: {cv_file.filename}. Allowed: .txt, .pdf, .docx')
+        
+        if jd_file and jd_file.filename != '' and not allowed_file(jd_file.filename):
+            return render_template('upload.html', error='Invalid JD file type. Allowed: .txt, .pdf, .docx')
+        
+        try:
+            print(f"DEBUG: Processing {len(cv_files)} CV(s)...")
             
-        if cv and allowed_file(cv.filename) and jd and allowed_file(jd.filename):
-            try:
-                print("DEBUG: Processing match...")
-                results = process_match(cv, jd)
-                print("DEBUG: Match processed successfully")
+            # Process all CVs
+            all_results = []
+            for idx, cv_file in enumerate(cv_files):
+                print(f"DEBUG: Processing CV {idx+1}/{len(cv_files)}: {cv_file.filename}")
                 
-                # Check for explicit errors returned by process_match
-                if isinstance(results, dict) and "error" in results:
-                     return render_template('upload.html', error=results["error"])
-
-                return render_template('results.html', results=results)
-            except Exception as e:
-                import traceback
-                traceback.print_exc()
-                print(f"ERROR: {e}")
+                # Reset file pointers
+                cv_file.seek(0)
+                if jd_file_provided and not jd_text_input:
+                    jd_file.seek(0)  # Reset JD file pointer for each CV
                 
-                # FALLBACK: If anything crashes, show a 0% result page instead of an error
-                fallback_result = {
-                    "match_percentage": 0,
-                    "confidence_score": 0,
-                    "semantic_score": 0,
-                    "tfidf_score": 0,
-                    "skill_match_score": 0,
-                    "experience_level": {"cv": "Error", "jd": "Error"},
-                    "education": {"cv": [], "jd": []},
-                    "skills": {
-                        "matched": [],
-                        "missing": [],
-                        "cv_categorized": {},
-                        "jd_categorized": {}
-                    },
-                    "details": f"Analysis failed: {str(e)}"
-                }
-                return render_template('results.html', results=fallback_result)
-        else:
-            return render_template('upload.html', error='Invalid file type. Allowed: .txt, .pdf, .docx')
+                # Process match
+                result = process_match(
+                    cv_file, 
+                    jd_text_input=jd_text_input if jd_text_input else None,
+                    jd_file=jd_file if jd_file_provided and not jd_text_input else None,
+                    cv_filename_override=f"cv_{idx}_{secure_filename(cv_file.filename)}"
+                )
+                
+                # Check for errors
+                if isinstance(result, dict) and "error" in result:
+                    return render_template('upload.html', error=result["error"])
+                
+                all_results.append(result)
+            
+            print(f"DEBUG: Processed {len(all_results)} CVs successfully")
+            
+            # Sort by match percentage (highest first)
+            all_results.sort(key=lambda x: x.get('match_percentage', 0), reverse=True)
+            
+            # If single CV, show single result page
+            if len(all_results) == 1:
+                return render_template('results.html', results=all_results[0])
+            
+            # If multiple CVs, show batch results
+            return render_template('batch_results.html', results=all_results, total_cvs=len(all_results))
+            
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"ERROR: {e}")
+            return render_template('upload.html', error=f'Processing failed: {str(e)}')
             
     return render_template('upload.html')
 
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/download/<path:filename>')
+def download_cv_file(filename):
+    return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
 
 @app.route('/api/match', methods=['POST'])
 def api_match():

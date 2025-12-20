@@ -1,0 +1,51 @@
+John Doe
+Email: john.doe@example.com
+Phone: +1-555-123-4567
+LinkedIn: linkedin.com/in/johndoe
+
+PROFESSIONAL SUMMARY
+Experienced Python Developer with 5+ years of expertise in web development, data science, and machine learning. Proven track record of delivering high-quality software solutions.
+
+WORK EXPERIENCE
+
+Senior Python Developer | Tech Corp Inc.
+January 2020 - Present
+- Developed and maintained web applications using Django and Flask
+- Implemented RESTful APIs serving 1M+ requests daily
+- Led a team of 4 junior developers
+- Reduced application load time by 40% through optimization
+
+Python Developer | StartupXYZ
+June 2018 - December 2019
+- Built data processing pipelines using Pandas and NumPy
+- Created machine learning models for customer segmentation
+- Collaborated with cross-functional teams on product development
+
+EDUCATION
+
+Bachelor of Science in Computer Science
+University of Technology, 2018
+GPA: 3.8/4.0
+
+SKILLS
+
+Technical Skills:
+- Programming: Python, JavaScript, SQL
+- Frameworks: Django, Flask, React
+- Databases: PostgreSQL, MongoDB, Redis
+- Tools: Git, Docker, AWS, Jenkins
+- Data Science: Pandas, NumPy, Scikit-learn, TensorFlow
+
+Soft Skills:
+- Team Leadership
+- Problem Solving
+- Communication
+- Project Management
+
+CERTIFICATIONS
+- AWS Certified Developer Associate
+- Python Professional Certificate
+
+PROJECTS
+- Built an e-commerce platform handling 10K+ daily transactions
+- Developed a recommendation system improving user engagement by 25%

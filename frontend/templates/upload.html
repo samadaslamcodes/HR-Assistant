@@ -72,22 +72,39 @@
                     <div class="row g-5">
                         <!-- CV Upload -->
                         <div class="col-md-6">
-                            <h5 class="mb-3 fw-bold"><i class="bi bi-file-earmark-person me-2"></i>Candidate CV</h5>
+                            <h5 class="mb-3 fw-bold"><i class="bi bi-file-earmark-person me-2"></i>Candidate CV(s)</h5>
                             <div class="upload-zone" id="cv-zone">
                                 <i class="bi bi-cloud-arrow-up upload-icon"></i>
-                                <p class="mb-1 fw-bold">Drop CV here</p>
-                                <p class="text-muted small">PDF, DOCX, TXT</p>
-                                <input type="file" name="cv" id="cv" class="d-none" accept=".pdf,.docx,.txt">
+                                <p class="mb-1 fw-bold">Drop CV(s) here or Browse</p>
+                                <p class="text-muted small">Select multiple files at once (Up to 10 files)</p>
+                                <p class="text-muted small" style="font-size: 0.75rem;"><i
+                                        class="bi bi-info-circle"></i> Hold Ctrl/Cmd to select multiple files</p>
+                                <input type="file" name="cv" id="cv" class="d-none" accept=".pdf,.docx,.txt" multiple>
                                 <button type="button" class="btn btn-sm btn-outline-primary mt-2"
                                     onclick="document.getElementById('cv').click()">Browse Files</button>
                                 <div id="cv-name" class="mt-2 text-success small fw-bold"></div>
+                                <div id="cv-list" class="mt-2"></div>
                             </div>
                         </div>
 
-                        <!-- JD Upload -->
+                        <!-- JD Upload/Text -->
                         <div class="col-md-6">
-                            <h5 class="mb-3 fw-bold"><i class="bi bi-briefcase me-2"></i>Job Description</h5>
-                            <div class="upload-zone" id="jd-zone">
+                            <div class="d-flex justify-content-between align-items-center mb-3">
+                                <h5 class="mb-0 fw-bold"><i class="bi bi-briefcase me-2"></i>Job Description</h5>
+                                <div class="btn-group btn-group-sm" role="group">
+                                    <button type="button" class="btn btn-outline-primary active" id="jd-file-btn"
+                                        onclick="toggleJDMode('file')">
+                                        <i class="bi bi-file-earmark"></i> Upload File
+                                    </button>
+                                    <button type="button" class="btn btn-outline-primary" id="jd-text-btn"
+                                        onclick="toggleJDMode('text')">
+                                        <i class="bi bi-textarea-t"></i> Paste Text
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- File Upload Mode -->
+                            <div class="upload-zone" id="jd-zone" style="display: block;">
                                 <i class="bi bi-cloud-upload upload-icon"></i>
                                 <p class="mb-1 fw-bold">Drop JD here</p>
                                 <p class="text-muted small">PDF, DOCX, TXT</p>
@@ -95,6 +112,15 @@
                                 <button type="button" class="btn btn-sm btn-outline-primary mt-2"
                                     onclick="document.getElementById('jd').click()">Browse Files</button>
                                 <div id="jd-name" class="mt-2 text-success small fw-bold"></div>
+                            </div>
+
+                            <!-- Text Input Mode -->
+                            <div id="jd-text-zone" style="display: none;">
+                                <textarea name="jd_text" id="jd_text" class="form-control" rows="10"
+                                    placeholder="Paste or type the job description here..."
+                                    style="background: rgba(255, 255, 255, 0.9); border: 2px dashed #0d6efd; border-radius: 15px; padding: 15px;"></textarea>
+                                <small class="text-muted mt-2 d-block">Word count: <span
+                                        id="word-count">0</span></small>
                             </div>
                         </div>
                     </div>
@@ -166,7 +192,41 @@
     </footer>
 
     <script>
-        // Simple drag and drop handling
+        // Toggle between JD file upload and text input
+        function toggleJDMode(mode) {
+            const fileZone = document.getElementById('jd-zone');
+            const textZone = document.getElementById('jd-text-zone');
+            const fileBtn = document.getElementById('jd-file-btn');
+            const textBtn = document.getElementById('jd-text-btn');
+            const jdFileInput = document.getElementById('jd');
+            const jdTextInput = document.getElementById('jd_text');
+
+            if (mode === 'file') {
+                fileZone.style.display = 'block';
+                textZone.style.display = 'none';
+                fileBtn.classList.add('active');
+                textBtn.classList.remove('active');
+                jdTextInput.value = ''; // Clear text input
+            } else {
+                fileZone.style.display = 'none';
+                textZone.style.display = 'block';
+                fileBtn.classList.remove('active');
+                textBtn.classList.add('active');
+                jdFileInput.value = ''; // Clear file input
+                document.getElementById('jd-name').textContent = '';
+            }
+        }
+
+        // Word counter for JD text input
+        const jdTextArea = document.getElementById('jd_text');
+        if (jdTextArea) {
+            jdTextArea.addEventListener('input', function () {
+                const words = this.value.trim().split(/\s+/).filter(word => word.length > 0);
+                document.getElementById('word-count').textContent = words.length;
+            });
+        }
+
+        // Enhanced drag and drop handling for multiple files
         function setupDragDrop(zoneId, inputId, nameId) {
             const zone = document.getElementById(zoneId);
             const input = document.getElementById(inputId);
@@ -186,29 +246,72 @@
                 zone.classList.remove('dragover');
                 if (e.dataTransfer.files.length) {
                     input.files = e.dataTransfer.files;
-                    nameDisplay.textContent = "Selected: " + e.dataTransfer.files[0].name;
+                    updateFileDisplay(inputId, nameId);
                 }
             });
 
             input.addEventListener('change', () => {
+                updateFileDisplay(inputId, nameId);
+            });
+        }
+
+        // Update file display for CV (multiple files)
+        function updateFileDisplay(inputId, nameId) {
+            const input = document.getElementById(inputId);
+            const nameDisplay = document.getElementById(nameId);
+
+            if (inputId === 'cv') {
+                // Handle multiple CV files
+                const cvList = document.getElementById('cv-list');
+                cvList.innerHTML = '';
+
+                if (input.files.length > 0) {
+                    nameDisplay.textContent = `${input.files.length} file(s) selected`;
+
+                    // Show file list
+                    const listHtml = Array.from(input.files).map((file, idx) => {
+                        return `
+                            <div class="d-flex align-items-center justify-content-between p-2 mb-1" style="background: rgba(13, 110, 253, 0.1); border-radius: 8px;">
+                                <span class="small"><i class="bi bi-file-earmark"></i> ${file.name}</span>
+                                <span class="badge bg-primary">${(file.size / 1024).toFixed(1)} KB</span>
+                            </div>
+                        `;
+                    }).join('');
+                    cvList.innerHTML = listHtml;
+                }
+            } else {
+                // Handle single JD file
                 if (input.files.length) {
                     nameDisplay.textContent = "Selected: " + input.files[0].name;
                 }
-            });
+            }
         }
 
         setupDragDrop('cv-zone', 'cv', 'cv-name');
         setupDragDrop('jd-zone', 'jd', 'jd-name');
 
-        // Form Validation for Hidden Inputs
+        // Form Validation
         document.getElementById('uploadForm').addEventListener('submit', function (e) {
             const cv = document.getElementById('cv');
-            const jd = document.getElementById('jd');
+            const jdFile = document.getElementById('jd');
+            const jdText = document.getElementById('jd_text').value.trim();
 
-            if (!cv.files.length || !jd.files.length) {
+            // Check if CV is provided
+            if (!cv.files.length) {
                 e.preventDefault();
-                alert("Please select both a CV and a Job Description file.");
+                alert("Please select at least one CV file.");
+                return;
             }
+
+            // Check if JD is provided (either file or text)
+            if (!jdFile.files.length && !jdText) {
+                e.preventDefault();
+                alert("Please provide a Job Description (either upload a file or paste text).");
+                return;
+            }
+
+            // JD text validation - allow any length
+            // Word count shown for info only
         });
     </script>
 </body>

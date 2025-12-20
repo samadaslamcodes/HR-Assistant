@@ -1,0 +1,31 @@
+Jane Smith
+Email: jane.smith@email.com
+Phone: (555) 987-6543
+
+OBJECTIVE
+Seeking a Python Developer position to leverage my skills in software development and data analysis.
+
+EXPERIENCE
+
+Junior Python Developer | DataCorp
+March 2021 - Present
+- Develop Python scripts for data analysis and automation
+- Work with SQL databases and data visualization tools
+- Participate in code reviews and team meetings
+
+Intern Software Developer | WebSolutions
+Summer 2020
+- Assisted in web application development
+- Learned Python, HTML, CSS, and JavaScript basics
+- Fixed bugs and implemented minor features
+
+EDUCATION
+
+Bachelor of Computer Science
+State University, 2021
+
+SKILLS
+- Python, SQL, HTML, CSS
+- Pandas, Matplotlib
+- Git, VS Code
+- Communication, Teamwork

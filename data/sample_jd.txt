@@ -1,0 +1,49 @@
+Job Title: Senior Python Developer
+
+Company: TechInnovate Solutions
+
+ABOUT US
+TechInnovate Solutions is a leading software development company specializing in AI and machine learning solutions. We are looking for talented developers to join our growing team.
+
+JOB DESCRIPTION
+We are seeking an experienced Senior Python Developer to join our engineering team. The ideal candidate will have strong expertise in Python development, web frameworks, and data science.
+
+RESPONSIBILITIES
+- Design and develop scalable web applications using Python frameworks (Django/Flask)
+- Build and maintain RESTful APIs
+- Implement machine learning models and data processing pipelines
+- Lead code reviews and mentor junior developers
+- Collaborate with cross-functional teams to deliver high-quality software
+- Optimize application performance and scalability
+- Write clean, maintainable, and well-documented code
+- Participate in agile development processes
+
+REQUIREMENTS
+- 5+ years of professional Python development experience
+- Strong knowledge of Django or Flask frameworks
+- Experience with SQL and NoSQL databases (PostgreSQL, MongoDB)
+- Proficiency in data science libraries (Pandas, NumPy, Scikit-learn)
+- Experience with cloud platforms (AWS, Azure, or GCP)
+- Strong understanding of RESTful API design
+- Experience with version control (Git)
+- Excellent problem-solving and communication skills
+- Bachelor's degree in Computer Science or related field
+
+PREFERRED QUALIFICATIONS
+- Experience with machine learning and TensorFlow
+- Knowledge of Docker and containerization
+- Experience with CI/CD pipelines
+- React or other frontend framework experience
+- AWS certifications
+
+BENEFITS
+- Competitive salary range: $120,000 - $150,000
+- Health insurance and dental coverage
+- 401(k) matching
+- Flexible work hours
+- Remote work options
+- Professional development budget
+- Collaborative team environment
+
+HOW TO APPLY
+Send your resume and cover letter to careers@techinnovate.com
