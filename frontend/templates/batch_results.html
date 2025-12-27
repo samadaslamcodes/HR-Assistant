@@ -96,7 +96,7 @@
                             </div>
                             <div class="d-flex gap-2 flex-wrap align-items-center">
                                 <span
-                                    class="experience-badge {% if result.experience_level.cv == 'Senior' %}exp-senior{% elif result.experience_level.cv == 'Mid-Level' %}exp-mid{% elif result.experience_level.cv == 'Junior' %}exp-junior{% else %}exp-default{% endif %}">
+                                    class="experience-badge {% if 'Senior' in result.experience_level.cv %}exp-senior{% elif 'Mid' in result.experience_level.cv %}exp-mid{% elif 'Junior' in result.experience_level.cv %}exp-junior{% else %}exp-default{% endif %}">
                                     {{ result.experience_level.cv }}
                                 </span>
                                 <span class="text-muted small">

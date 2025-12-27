@@ -72,12 +72,10 @@ def validate_cv(text: str) -> Tuple[bool, float, str]:
     Returns:
         (is_valid, confidence, reason)
     """
-    if not text or len(text.strip()) < 50:
-        return False, 0.0, "Document is too short (minimum 50 characters required)"
+    if not text or len(text.strip()) < 10:
+        return False, 0.0, "Document is too short (minimum 10 characters required)"
     
-    word_count = len(text.split())
-    if word_count < 50:
-        return False, 0.0, "Document is too short (minimum 50 words required)"
+    # Word count check removed
     
     # Count CV-specific keywords
     cv_keyword_count = count_keywords(text, CV_KEYWORDS)
@@ -111,18 +109,9 @@ def validate_cv(text: str) -> Tuple[bool, float, str]:
     # Normalize confidence to 0-100
     confidence = max(0, min(confidence, 100))
     
-    # Decision threshold
-    is_valid = confidence >= 60
-    
-    if is_valid:
-        reason = f"Valid CV detected (confidence: {confidence:.1f}%)"
-    else:
-        if cv_keyword_count < 3:
-            reason = "This doesn't appear to be a CV. Missing typical CV sections like experience, education, or skills."
-        elif has_company:
-            reason = "This looks more like a Job Description than a CV."
-        else:
-            reason = f"Document doesn't match CV format (confidence: {confidence:.1f}%)"
+    # RELAXED VALIDATION: Always valid if it passed the length check
+    is_valid = True
+    reason = f"Valid CV detected (confidence: {confidence:.1f}%)"
     
     return is_valid, confidence, reason
 
@@ -134,12 +123,13 @@ def validate_jd(text: str) -> Tuple[bool, float, str]:
     Returns:
         (is_valid, confidence, reason)
     """
-    if not text or len(text.strip()) < 50:
-        return False, 0.0, "Document is too short (minimum 50 characters required)"
+    if not text or len(text.strip()) < 10:
+        return False, 0.0, "Document is too short (minimum 10 characters required)"
     
-    word_count = len(text.split())
-    if word_count < 50:
-        return False, 0.0, "Document is too short (minimum 50 words required)"
+    # Word count check removed as requested
+    # word_count = len(text.split())
+    # if word_count < 50:
+    #     return False, 0.0, "Document is too short (minimum 50 words required)"
     
     # Count JD-specific keywords
     jd_keyword_count = count_keywords(text, JD_KEYWORDS)
@@ -173,18 +163,10 @@ def validate_jd(text: str) -> Tuple[bool, float, str]:
     # Normalize confidence to 0-100
     confidence = max(0, min(confidence, 100))
     
-    # Decision threshold
-    is_valid = confidence >= 60
-    
-    if is_valid:
-        reason = f"Valid Job Description detected (confidence: {confidence:.1f}%)"
-    else:
-        if jd_keyword_count < 3:
-            reason = "This doesn't look like a Job Description. Missing typical JD sections like responsibilities, requirements, or qualifications."
-        elif has_contact:
-            reason = "This looks more like a CV/Resume than a Job Description."
-        else:
-            reason = f"Document doesn't match Job Description format (confidence: {confidence:.1f}%)"
+    # RELAXED VALIDATION: Always valid if it passed the length check
+    # We accept "whatever JD" the user provides
+    is_valid = True
+    reason = f"Valid Job Description detected (confidence: {confidence:.1f}%)"
     
     return is_valid, confidence, reason
 

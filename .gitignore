@@ -151,3 +151,7 @@ cython_debug/
 *.h5
 *.pkl
 *.model
+
+# Project specific
+uploads/
+backend/uploads/
