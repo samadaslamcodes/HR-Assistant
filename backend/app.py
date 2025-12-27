@@ -149,12 +149,15 @@ def upload_file():
             
             # Log to Admin Dashboard
             for res in all_results:
+                cand_id = len(processed_candidates)
                 processed_candidates.insert(0, {
+                    "id": cand_id,
                     "name": res.get('candidate_name', 'Unknown'),
                     "filename": res.get('cv_filename', 'Unknown'),
                     "internal_filename": res.get('cv_internal_filename', 'Unknown'),
                     "score": res.get('match_percentage', 0),
-                    "exp": res.get('experience_level', {}).get('cv', 'N/A')
+                    "exp": res.get('experience_level', {}).get('cv', 'N/A'),
+                    "full_results": res  # Store full results for the view details button
                 })
             
             # Sort by match percentage (highest first)
@@ -182,6 +185,14 @@ def about():
 @app.route('/admin')
 def admin():
     return render_template('admin.html', candidates=processed_candidates)
+
+@app.route('/admin/analysis/<int:cand_id>')
+def view_analysis(cand_id):
+    # Find candidate by ID
+    candidate = next((c for c in processed_candidates if c['id'] == cand_id), None)
+    if not candidate:
+        return "Candidate not found", 404
+    return render_template('results.html', results=candidate['full_results'])
 
 @app.route('/download/<path:filename>')
 def download_cv_file(filename):
