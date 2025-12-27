@@ -19,5 +19,12 @@ This log documents the iterative process and key prompts used to build the **HR 
 *   **Prompt 8 (Production Readiness):** "Configure the project for Railway deployment. Create a `railway.toml` that uses Nixpacks, installs Python 3.11, and automatically downloads the `en_core_web_md` SpaCy model during the build phase."
 *   **Prompt 9 (SEO & Metadata):** "Update all templates with SEO meta tags, descriptive titles, and unique IDs for automated testing. Ensure the design is fully responsive for mobile and desktop."
 
+## Scoring Engine Analysis
+The systems calculates a **Weighted Match Score** by analyzing four key dimensions of the candidate's profile:
+1.  **AI Semantic Analysis (30%):** Uses SpaCy's vector embeddings to understand the "meaning" of the CV. This detects if a candidate is a match even if they use different words (e.g., "Fullstack Developer" vs "Frontend & Backend Engineer").
+2.  **Skill Overlap (30%):** Performs a direct comparison of technical tools, languages, and soft skills required by the recruiter.
+3.  **TF-IDF Structural Match (20%):** Uses mathematical word-frequency models from Scikit-learn to see how well the document's structure aligns with a typical professional JD.
+4.  **Credential Check (20%):** Automatically parses years of experience (Junior/Mid/Senior) and educational degrees (PhD/Masters/Bachelors) to ensure the candidate meets minimum career requirements.
+
 ---
 *Created and maintained by Abdul Samad with AI assistance.*
