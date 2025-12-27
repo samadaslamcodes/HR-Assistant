@@ -118,6 +118,23 @@
             <!-- MAIN COLUMN (Left - Col 8) -->
             <div class="col-lg-8">
 
+                <!-- 1. Candidate Profile Card -->
+                <div class="glass-card mb-4 p-4 border-0 shadow-sm"
+                    style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(255, 255, 255, 0.7) 100%);">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="bg-primary bg-opacity-10 text-primary rounded-circle p-3 me-3">
+                            <i class="bi bi-person-badge fs-3"></i>
+                        </div>
+                        <div>
+                            <h4 class="fw-bold mb-0 text-dark">{{ results.candidate_name }}</h4>
+                            <span class="badge bg-primary bg-opacity-10 text-primary mt-1">Professional Profile</span>
+                        </div>
+                    </div>
+                    <p class="text-secondary mb-0 fw-medium" style="line-height: 1.6; font-size: 1.05rem;">
+                        {{ results.candidate_summary }}
+                    </p>
+                </div>
+
                 <!-- 2. Technical Skills Evaluation (Tag Cloud) -->
                 {% if results.technical_skills_evaluation %}
                 <div class="glass-card mb-4 p-4 border-0 shadow-sm">

@@ -247,6 +247,50 @@ def compare_education(cv_edu, jd_edu):
     else:
         return "Below Requirements", "danger"
 
+def extract_name(text):
+    """
+    Extracts candidate name from CV text.
+    First tries SpaCy NER, then falls back to first lines.
+    """
+    if nlp:
+        doc = nlp(text[:1000]) # Check first 1000 chars
+        for ent in doc.ents:
+            if ent.label_ == "PERSON":
+                # Basic cleaning
+                name = ent.text.strip()
+                if len(name.split()) >= 2 and len(name) < 50:
+                    return name
+    
+    # Heuristic fallback: often the name is in the first 2-3 lines
+    lines = [line.strip() for line in text.split('\n') if line.strip()]
+    for line in lines[:3]:
+        # Simple check for Name-like string (2-3 words, no numbers/special chars)
+        if 2 <= len(line.split()) <= 4 and re.match(r'^[A-Za-z\s]+$', line):
+            return line
+            
+    return "Candidate"
+
+def generate_summary(cv_text, name, results):
+    """
+    Generates a 2-line professional summary.
+    """
+    exp = results.get('experience_level', {}).get('cv', 'professional')
+    edu = results.get('education', {}).get('cv', [])
+    top_skills = results.get('skills', {}).get('matched', [])[:3]
+    
+    line1 = f"{name} is a {exp} candidate"
+    if edu and edu[0] != "Not Specified":
+        line1 += f" with a background in {edu[0]}."
+    else:
+        line1 += "."
+        
+    if top_skills:
+        line2 = f"Their core technical strengths include {', '.join(top_skills).title()}."
+    else:
+        line2 = "Their profile shows potential alignment with the job requirements."
+        
+    return f"{line1} {line2}"
+
 def calculate_cv_jd_match(cv_text, jd_text):
     """
     Advanced matching function combining:
@@ -398,7 +442,20 @@ def calculate_cv_jd_match(cv_text, jd_text):
         exp_status = "Not Specified"
         exp_class = "neutral"
 
+    # New: Extract Name and Generate Summary
+    candidate_name = extract_name(cv_text)
+    
+    # Partial results for summary gen
+    partial_results = {
+        "experience_level": {"cv": cv_exp},
+        "education": {"cv": cv_edu},
+        "skills": {"matched": list(common_skills)}
+    }
+    candidate_summary = generate_summary(cv_text, candidate_name, partial_results)
+
     return {
+        "candidate_name": candidate_name,
+        "candidate_summary": candidate_summary,
         "match_percentage": round(final_score * 100, 2),
         "confidence_score": round(confidence * 100, 2),
         "semantic_score": round(semantic_score * 100, 2),

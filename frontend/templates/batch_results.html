@@ -125,16 +125,13 @@
                     <!-- Detailed Info (Collapsible) -->
                     <div id="candidate-{{ loop.index }}" class="details-section" style="display: none;">
                         <!-- CV Summary Section -->
-                        <div class="cv-summary-card mb-4">
+                        <div class="cv-summary-card mb-4"
+                            style="background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(255, 255, 255, 0.5) 100%); border-left: 4px solid #6366f1;">
                             <h6 class="fw-bold mb-2" style="color: #6366f1;">
-                                <i class="bi bi-stars me-2"></i>CV Highlights
+                                <i class="bi bi-person-circle me-2"></i>{{ result.candidate_name }}
                             </h6>
-                            <p class="mb-0 small text-muted">
-                                This candidate is identified as a <strong>{{ result.experience_level.cv }}</strong>
-                                professional with education in <strong>{{ result.education.cv|join(', ') if
-                                    result.education.cv else 'Not specified' }}</strong>.
-                                Their profile shows strong alignment with <strong>{{ result.skills.matched|length
-                                    }}</strong> key requirement(s) from the job description.
+                            <p class="mb-0 small text-dark fw-medium" style="line-height: 1.6;">
+                                {{ result.candidate_summary }}
                             </p>
                         </div>
 
