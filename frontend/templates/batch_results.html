@@ -33,6 +33,9 @@
                     <li class="nav-item">
                         <a class="nav-link" href="/about">About</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin">Admin Dashboard</a>
+                    </li>
                 </ul>
             </div>
         </div>
@@ -83,11 +86,12 @@
 
                         <!-- Candidate Info -->
                         <div class="col">
-                            <div class="d-flex align-items-center justify-content-between">
-                                <h5 class="mb-1 fw-bold" style="color: #1e293b;">
-                                    <i class="bi bi-file-earmark-person me-2" style="color: #6366f1;"></i>{{
-                                    result.cv_filename }}
-                                </h5>
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div class="candidate-identity-box">
+                                    <h5 class="mb-0 fw-bold title-case">
+                                        <i class="bi bi-person-check-fill me-2"></i>{{ result.candidate_name }}
+                                    </h5>
+                                </div>
                                 <a href="/download/{{ result.cv_internal_filename }}"
                                     class="btn btn-sm btn-outline-primary ms-3" onclick="event.stopPropagation();"
                                     title="Download CV">
@@ -95,6 +99,9 @@
                                 </a>
                             </div>
                             <div class="d-flex gap-2 flex-wrap align-items-center">
+                                <span class="text-muted small fw-bold">
+                                    <i class="bi bi-file-earmark-text me-1"></i>{{ result.cv_filename }}
+                                </span>
                                 <span
                                     class="experience-badge {% if 'Senior' in result.experience_level.cv %}exp-senior{% elif 'Mid' in result.experience_level.cv %}exp-mid{% elif 'Junior' in result.experience_level.cv %}exp-junior{% else %}exp-default{% endif %}">
                                     {{ result.experience_level.cv }}

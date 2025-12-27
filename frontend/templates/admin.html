@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - HR Assistant</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            padding-top: 100px;
+        }
+
+        .admin-stat-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .candidate-entry-card {
+            transition: all 0.3s ease;
+        }
+
+        .candidate-entry-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .identity-badge {
+            background: var(--primary-gradient);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 8px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="/">
+                <i class="bi bi-robot me-2"></i>HR Assistant
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/admin">Admin Dashboard</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mb-5">
+        <div class="row mb-5 align-items-center">
+            <div class="col-md-6">
+                <h1 class="hero-title" style="font-size: 2.5rem; text-align: left; margin-bottom: 0;">Admin Control
+                    Panel</h1>
+                <p class="text-secondary">Manage and review all processed candidate applications</p>
+            </div>
+            <div class="col-md-6 text-md-end">
+                <button class="btn btn-primary-gradient rounded-pill">
+                    <i class="bi bi-file-earmark-spreadsheet me-2"></i>Export Report
+                </button>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-md-3">
+                <div class="admin-stat-card">
+                    <h3 class="fw-bold mb-0 text-primary">{{ candidates|length }}</h3>
+                    <small class="text-muted">Total Candidates</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="admin-stat-card">
+                    <h3 class="fw-bold mb-0 text-success">{% if candidates|length > 0 %}78%{% else %}0%{% endif %}</h3>
+                    <small class="text-muted">Avg Match Score</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="admin-stat-card">
+                    <h3 class="fw-bold mb-0 text-warning">{% if candidates|length > 0 %}{{ (candidates|length *
+                        0.4)|round|int }}{% else %}0{% endif %}</h3>
+                    <small class="text-muted">Shortlisted</small>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="admin-stat-card">
+                    <h3 class="fw-bold mb-0 text-info">Active</h3>
+                    <small class="text-muted">System Status</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass-card shadow-sm border-0 p-4">
+            <h5 class="fw-bold mb-4"><i class="bi bi-people-fill me-2 text-primary"></i>Recent Applications</h5>
+
+            {% if not candidates %}
+            <div class="text-center py-5">
+                <i class="bi bi-inbox text-muted mb-3" style="font-size: 3rem;"></i>
+                <p class="text-muted">No candidates processed yet. Start by uploading CVs on the home page.</p>
+                <a href="/" class="btn btn-outline-primary btn-sm rounded-pill">Go to Upload</a>
+            </div>
+            {% else %}
+            <div class="row g-4">
+                {% for cand in candidates %}
+                <div class="col-md-6 col-lg-4">
+                    <div class="glass-card h-100 p-4 border shadow-sm candidate-entry-card" style="background: white;">
+                        <span class="identity-badge">IDENTIFIED</span>
+                        <div class="candidate-identity-box mb-3 d-block">
+                            <h5 class="fw-bold mb-0 text-dark">{{ cand.name }}</h5>
+                        </div>
+                        <p class="small text-muted mb-3" style="font-size: 0.85rem;">
+                            <strong>File:</strong> {{ cand.filename }}<br>
+                            <strong>Level:</strong> {{ cand.exp }}<br>
+                            <strong>Score:</strong> <span class="badge bg-light text-dark border">{{ cand.score
+                                }}%</span>
+                        </p>
+                        <div class="d-flex gap-2">
+                            <a href="/download/{{ cand.internal_filename }}"
+                                class="btn btn-sm btn-outline-secondary flex-grow-1">
+                                <i class="bi bi-download me-1"></i> CV
+                            </a>
+                            <a href="#" class="btn btn-sm btn-primary-gradient flex-grow-1">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <footer class="text-center py-4 mt-5">
+        <div class="container">
+            <span style="color: rgba(0,0,0,0.4); font-size: 0.9rem;">Admin Console &bull; Powered by <strong>Abdul
+                    Samad</strong></span>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

@@ -131,6 +131,20 @@ body {
     line-height: 1.6;
 }
 
+/* Candidate Identity Box */
+.candidate-identity-box {
+    background: white;
+    padding: 0.5rem 1.25rem;
+    border-radius: 12px;
+    border: 2px solid rgba(99, 102, 241, 0.2);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+    display: inline-block;
+}
+
+.title-case {
+    text-transform: capitalize;
+}
+
 /* Glass Card */
 .glass-card {
     background: var(--surface-glass);

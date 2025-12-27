@@ -4,11 +4,17 @@ from werkzeug.utils import secure_filename
 from match import read_file, calculate_cv_jd_match
 from document_validator import validate_cv, validate_jd
 
+import json
+
 # Adjust paths to point to frontend folder (sibling to backend)
 base_dir = os.path.dirname(os.path.abspath(__file__))
 frontend_dir = os.path.join(base_dir, '..', 'frontend')
 template_dir = os.path.abspath(os.path.join(frontend_dir, 'templates'))
 static_dir = os.path.abspath(os.path.join(frontend_dir, 'static'))
+
+# Global list to track candidates (in-memory for session)
+# In production, this would be a database
+processed_candidates = []
 
 print(f"Template Dir: {template_dir}")
 print(f"Static Dir: {static_dir}")
@@ -141,6 +147,16 @@ def upload_file():
             
             print(f"DEBUG: Processed {len(all_results)} CVs successfully")
             
+            # Log to Admin Dashboard
+            for res in all_results:
+                processed_candidates.insert(0, {
+                    "name": res.get('candidate_name', 'Unknown'),
+                    "filename": res.get('cv_filename', 'Unknown'),
+                    "internal_filename": res.get('cv_internal_filename', 'Unknown'),
+                    "score": res.get('match_percentage', 0),
+                    "exp": res.get('experience_level', {}).get('cv', 'N/A')
+                })
+            
             # Sort by match percentage (highest first)
             all_results.sort(key=lambda x: x.get('match_percentage', 0), reverse=True)
             
@@ -162,6 +178,10 @@ def upload_file():
 @app.route('/about')
 def about():
     return render_template('about.html')
+
+@app.route('/admin')
+def admin():
+    return render_template('admin.html', candidates=processed_candidates)
 
 @app.route('/download/<path:filename>')
 def download_cv_file(filename):
