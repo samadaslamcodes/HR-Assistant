@@ -194,6 +194,12 @@ def view_analysis(cand_id):
         return "Candidate not found", 404
     return render_template('results.html', results=candidate['full_results'])
 
+@app.route('/admin/delete/<int:cand_id>', methods=['POST'])
+def delete_candidate(cand_id):
+    global processed_candidates
+    processed_candidates = [c for c in processed_candidates if c['id'] != cand_id]
+    return redirect(url_for('admin'))
+
 @app.route('/download/<path:filename>')
 def download_cv_file(filename):
     return send_from_directory(app.config['UPLOAD_FOLDER'], filename, as_attachment=True)
