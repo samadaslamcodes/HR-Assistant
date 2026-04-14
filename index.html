@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HR Match AI</title>
+    <title>SamadMatch AI - Smart Resume Screening</title>
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Icons -->
@@ -17,10 +18,36 @@
     <!-- Custom Style -->
     <link href="css/style.css" rel="stylesheet">
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
-        #loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); display: none; justify-content: center; align-items: center; z-index: 10000; }
-        .glass-card { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(10px); border-radius: 20px; padding: 2rem; border: 1px solid rgba(255, 255, 255, 0.3); box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .cursor-pointer { cursor: pointer; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #f8fafc;
+        }
+
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -34,14 +61,18 @@
 
     <nav class="navbar navbar-expand-lg fixed-top bg-white border-bottom">
         <div class="container">
-            <a class="navbar-brand fw-bold" href="#" onclick="showSection('upload-section')">
-                <i class="bi bi-robot me-2 text-primary"></i>HR Assistant
+            <a class="navbar-brand fw-bold d-flex align-items-center" href="#" onclick="showSection('upload-section')">
+                <img src="assets/logo.png" alt="SamadMatch Logo" height="80" class="me-3 rounded-3">
+                <span>Samad<span class="text-dark">Match</span> AI</span>
             </a>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('upload-section')">Home</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('reviews-section')">Reviews</a></li>
-                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('influence-section')">Influence</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#" onclick="showSection('upload-section')">Home</a>
+                    </li>
+                    <li class="nav-item"><a class="nav-link" href="#"
+                            onclick="showSection('reviews-section')">Reviews</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#"
+                            onclick="showSection('influence-section')">Influence</a></li>
                 </ul>
             </div>
         </div>
@@ -50,7 +81,9 @@
     <!-- Upload Section -->
     <div id="upload-section" class="container" style="padding-top: 100px;">
         <div class="hero-section text-center mb-5">
-            <h1 class="hero-title fw-bold" style="font-size: 3rem; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Smart Resume Screening</h1>
+            <h1 class="hero-title fw-bold"
+                style="font-size: 3rem; background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+                Smart Resume Screening</h1>
         </div>
 
         <div class="row justify-content-center">
@@ -60,12 +93,17 @@
                         <div class="row g-5">
                             <!-- CV Upload -->
                             <div class="col-md-6">
-                                <h5 class="mb-3 fw-bold"><i class="bi bi-file-earmark-person me-2"></i>Candidate CV(s)</h5>
-                                <div class="upload-zone border-2 border-dashed border-primary rounded-4 p-5 text-center bg-light transition-all" id="cv-drop-zone">
+                                <h5 class="mb-3 fw-bold"><i class="bi bi-file-earmark-person me-2"></i>Candidate CV(s)
+                                </h5>
+                                <div class="upload-zone border-2 border-dashed border-primary rounded-4 p-5 text-center bg-light transition-all"
+                                    id="cv-drop-zone">
                                     <i class="bi bi-cloud-arrow-up text-primary" style="font-size: 3.5rem;"></i>
                                     <p class="mb-3 fw-bold">Drop CV(s) here or Browse</p>
-                                    <input type="file" id="cv-input" class="d-none" accept=".pdf,.docx,.txt" multiple onchange="handleCvChange()">
-                                    <label for="cv-input" class="btn btn-primary rounded-pill px-4 cursor-pointer shadow-sm">Select CV Files</label>
+                                    <input type="file" id="cv-input" class="d-none" accept=".pdf,.docx,.txt" multiple
+                                        onchange="handleCvChange()">
+                                    <label for="cv-input"
+                                        class="btn btn-primary rounded-pill px-4 cursor-pointer shadow-sm">Select CV
+                                        Files</label>
                                     <div id="cv-file-list" class="mt-4 text-start"></div>
                                 </div>
                             </div>
@@ -75,29 +113,39 @@
                                 <div class="d-flex justify-content-between align-items-center mb-3">
                                     <h5 class="mb-0 fw-bold"><i class="bi bi-briefcase me-2"></i>Job Description</h5>
                                     <div class="btn-group btn-group-sm">
-                                        <button type="button" class="btn btn-outline-primary active" id="jd-file-mode" onclick="setJDMode('file')">File</button>
-                                        <button type="button" class="btn btn-outline-primary" id="jd-text-mode" onclick="setJDMode('text')">Text</button>
+                                        <button type="button" class="btn btn-outline-primary active" id="jd-file-mode"
+                                            onclick="setJDMode('file')">File</button>
+                                        <button type="button" class="btn btn-outline-primary" id="jd-text-mode"
+                                            onclick="setJDMode('text')">Text</button>
                                     </div>
                                 </div>
 
                                 <div id="jd-file-container">
-                                    <div class="upload-zone border-2 border-dashed border-primary rounded-4 p-5 text-center bg-light" id="jd-drop-zone">
+                                    <div class="upload-zone border-2 border-dashed border-primary rounded-4 p-5 text-center bg-light"
+                                        id="jd-drop-zone">
                                         <i class="bi bi-file-earmark-text text-primary" style="font-size: 3.5rem;"></i>
                                         <p class="mb-3 fw-bold">Drop JD file here</p>
-                                        <input type="file" id="jd-input" class="d-none" accept=".pdf,.docx,.txt" onchange="handleJdChange()">
-                                        <label for="jd-input" class="btn btn-primary rounded-pill px-4 cursor-pointer shadow-sm">Select JD File</label>
+                                        <input type="file" id="jd-input" class="d-none" accept=".pdf,.docx,.txt"
+                                            onchange="handleJdChange()">
+                                        <label for="jd-input"
+                                            class="btn btn-primary rounded-pill px-4 cursor-pointer shadow-sm">Select JD
+                                            File</label>
                                         <div id="jd-selected-filename" class="mt-4 fw-bold text-success small"></div>
                                     </div>
                                 </div>
 
                                 <div id="jd-text-container" style="display: none;">
-                                    <textarea id="jd-text-input" class="form-control rounded-4 shadow-none border-2 border-primary border-opacity-25" rows="10" placeholder="Paste the job description here..."></textarea>
+                                    <textarea id="jd-text-input"
+                                        class="form-control rounded-4 shadow-none border-2 border-primary border-opacity-25"
+                                        rows="10" placeholder="Paste the job description here..."></textarea>
                                 </div>
                             </div>
                         </div>
 
                         <div class="text-center mt-5">
-                            <button type="submit" class="btn btn-lg btn-primary rounded-pill px-5 shadow-lg fw-bold">Analyze Compatibility</button>
+                            <button type="submit"
+                                class="btn btn-lg btn-primary rounded-pill px-5 shadow-lg fw-bold">Analyze
+                                Compatibility</button>
                         </div>
                     </form>
                 </div>
@@ -111,15 +159,66 @@
     </div>
 
     <!-- Reviews Section -->
-    <div id="reviews-section" class="container" style="display: none; padding-top: 100px;">
-        <div class="row mb-5 text-center">
-             <h2 class="fw-bold">Community Feedback</h2>
-             <p class="text-muted">Trusted by HR specialists worldwide.</p>
+    <div id="reviews-section" class="container" style="display: none; padding-top: 160px; padding-bottom: 100px;">
+        <div class="row mb-5 text-center animate-entry">
+            <h2 class="fw-bold display-5">Community Feedback</h2>
+            <p class="text-muted lead">Trusted by HR specialists and recruiters worldwide.</p>
         </div>
-        <div class="row g-4">
-             <div class="col-md-4"><div class="glass-card">"Reduced our screening time by 60%." <br><small>- Sarah J.</small></div></div>
-             <div class="col-md-4"><div class="glass-card">"Privacy is a game changer." <br><small>- Michael C.</small></div></div>
-             <div class="col-md-4"><div class="glass-card">"Incredibly accurate match scores." <br><small>- Elena R.</small></div></div>
+        <div class="row g-4 animate-entry delay-1">
+            <div class="col-md-4">
+                <div class="glass-card h-100 d-flex flex-column justify-content-between p-4 rounded-5 border shadow-sm">
+                    <p class="mb-4">"SamadMatch AI has completely transformed our recruitment process. The accuracy of the skill matching is unmatched!"</p>
+                    <div class="mt-auto border-top pt-3">
+                        <h6 class="fw-bold mb-0">James Wilson</h6>
+                        <small class="text-primary fw-600">Recruitment Lead</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card h-100 d-flex flex-column justify-content-between p-4 rounded-5 border shadow-sm">
+                    <p class="mb-4">"The best tool for bulk screening CVs. It saves our HR team at least 15 hours of manual work every single week."</p>
+                    <div class="mt-auto border-top pt-3">
+                        <h6 class="fw-bold mb-0">Priyanka Rao</h6>
+                        <small class="text-primary fw-600">HR Manager</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card h-100 d-flex flex-column justify-content-between p-4 rounded-5 border shadow-sm">
+                    <p class="mb-4">"I love the privacy-first approach. Processing everything locally in the browser is a brilliant security feature."</p>
+                    <div class="mt-auto border-top pt-3">
+                        <h6 class="fw-bold mb-0">David Lee</h6>
+                        <small class="text-primary fw-600">Tech Recruiter</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card h-100 d-flex flex-column justify-content-between p-4 rounded-5 border shadow-sm">
+                    <p class="mb-4">"The interface is beautiful and the match reports are super detailed. It's incredibly easy to use for our entire team."</p>
+                    <div class="mt-auto border-top pt-3">
+                        <h6 class="fw-bold mb-0">Sofia Khan</h6>
+                        <small class="text-primary fw-600">Talent Acquisition</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card h-100 d-flex flex-column justify-content-between p-4 rounded-5 border shadow-sm">
+                    <p class="mb-4">"Integrating SamadMatch AI into our talent workflow was the most cost-effective decision we've made this year."</p>
+                    <div class="mt-auto border-top pt-3">
+                        <h6 class="fw-bold mb-0">Robert Gorski</h6>
+                        <small class="text-primary fw-600">Operations Director</small>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="glass-card h-100 d-flex flex-column justify-content-between p-4 rounded-5 border shadow-sm">
+                    <p class="mb-4">"Finally, an AI matching engine that understands technical nuances and project context correctly."</p>
+                    <div class="mt-auto border-top pt-3">
+                        <h6 class="fw-bold mb-0">Ahmed Sayed</h6>
+                        <small class="text-primary fw-600">Senior Developer</small>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -127,8 +226,9 @@
     <div id="influence-section" class="container" style="display: none; padding-top: 100px;">
         <div class="row align-items-center mb-5 g-5 justify-content-center">
             <div class="col-lg-8 text-center">
-                <h1 class="display-4 fw-bold mb-3">Shaping the Future <br><span class="text-primary">of HR Technology</span></h1>
-                <p class="lead text-muted mb-4">HR Assistant is more than a tool—it's a vision for a faster, safer, and more accurate recruitment ecosystem.</p>
+                <h1 class="display-4 fw-bold mb-3">Shaping the Future <br><span class="text-primary">of Recruitment</span></h1>
+                <p class="lead text-muted mb-4">SamadMatch AI is more than a tool—it's a vision for a faster, safer, and
+                    more accurate recruitment ecosystem.</p>
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <div class="p-4 border rounded-4 bg-white shadow-sm h-100">
@@ -151,21 +251,24 @@
                 <div class="p-4 bg-white rounded-5 border h-100 shadow-sm text-center">
                     <i class="bi bi-lightning-charge-fill text-warning fs-1 mb-3"></i>
                     <h5 class="fw-bold">Zero Latency</h5>
-                    <p class="text-muted small">By processing everything in the browser, we eliminate the need for server round-trips, making screening instantaneous.</p>
+                    <p class="text-muted small">By processing everything in the browser, we eliminate the need for
+                        server round-trips, making screening instantaneous.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-4 bg-white rounded-5 border h-100 shadow-sm text-center">
                     <i class="bi bi-shield-check-fill text-success fs-1 mb-3"></i>
                     <h5 class="fw-bold">Privacy First</h5>
-                    <p class="text-muted small">Data never leaves the client's device. This influences a more secure approach to handling sensitive candidate information.</p>
+                    <p class="text-muted small">Data never leaves the client's device. This influences a more secure
+                        approach to handling sensitive candidate information.</p>
                 </div>
             </div>
             <div class="col-md-4">
                 <div class="p-4 bg-white rounded-5 border h-100 shadow-sm text-center">
                     <i class="bi bi-graph-up-arrow text-primary fs-1 mb-3"></i>
                     <h5 class="fw-bold">Market Impact</h5>
-                    <p class="text-muted small">Our algorithm helps companies reduce "Time to Hire" by an average of 14 days per position filled.</p>
+                    <p class="text-muted small">Our algorithm helps companies reduce "Time to Hire" by an average of 14
+                        days per position filled.</p>
                 </div>
             </div>
         </div>
@@ -173,34 +276,37 @@
         <div class="glass-card mb-5 text-center bg-primary bg-opacity-10 border-0">
             <h4 class="fw-bold mb-3">The Edge Computing Advantage</h4>
             <p class="text-muted mx-auto mb-0" style="max-width: 800px;">
-                We are influencing the industry by proving that complex AI & NLP tasks don't require expensive server backends. By utilizing the user's browser, we provide enterprise-grade screening at zero infrastructure cost.
+                We are influencing the industry by proving that complex AI & NLP tasks don't require expensive server
+                backends. By utilizing the user's browser, we provide enterprise-grade screening at zero infrastructure
+                cost.
             </p>
         </div>
     </div>
 
     <footer class="text-center py-5">
-        <div class="container"><span class="text-muted small">Powered by <strong>Abdul Samad</strong></span></div>
+        <div class="container"><span class="text-muted small">Powered by <strong>SamadMatch AI</strong> | Created by <strong>Abdul Samad</strong></span></div>
     </footer>
 
     <!-- Scripts -->
     <script>
-      const sections = ['upload-section', 'results-section', 'reviews-section', 'influence-section'];
-      function showSection(sectionId) {
-          sections.forEach(id => {
-              const el = document.getElementById(id);
-              if (el) el.style.setProperty('display', (id === sectionId) ? 'block' : 'none', 'important');
-          });
-      }
-      function setJDMode(mode) {
-          window.jdMode = mode;
-          document.getElementById('jd-file-mode').classList.toggle('active', mode === 'file');
-          document.getElementById('jd-text-mode').classList.toggle('active', mode === 'text');
-          document.getElementById('jd-file-container').style.display = mode === 'file' ? 'block' : 'none';
-          document.getElementById('jd-text-container').style.display = mode === 'text' ? 'block' : 'none';
-      }
-      pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+        const sections = ['upload-section', 'results-section', 'reviews-section', 'influence-section'];
+        function showSection(sectionId) {
+            sections.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) el.style.setProperty('display', (id === sectionId) ? 'block' : 'none', 'important');
+            });
+        }
+        function setJDMode(mode) {
+            window.jdMode = mode;
+            document.getElementById('jd-file-mode').classList.toggle('active', mode === 'file');
+            document.getElementById('jd-text-mode').classList.toggle('active', mode === 'text');
+            document.getElementById('jd-file-container').style.display = mode === 'file' ? 'block' : 'none';
+            document.getElementById('jd-text-container').style.display = mode === 'text' ? 'block' : 'none';
+        }
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
     </script>
-    <script src="js/logic.js?v=final"></script>
-    <script src="js/ui.js?v=final"></script>
+    <script src="js/logic.js?v=2.1"></script>
+    <script src="js/ui.js?v=2.1"></script>
 </body>
+
 </html>

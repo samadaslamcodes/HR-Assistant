@@ -199,7 +199,9 @@ function calculateMatch(cvText, jdText) {
         education: { cv: cvEdu, jd: jdEdu },
         skills: {
             matched: Array.from(common),
-            missing: Array.from(missing)
+            missing: Array.from(missing),
+            cv_skills: Array.from(cvSkills.flat),
+            jd_skills: Array.from(jdSkills.flat)
         },
         candidate_name: extractName(cvText),
         summary: generateSummary(cvText, cvExp, Array.from(common), cvEdu[0])

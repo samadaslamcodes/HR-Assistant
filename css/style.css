@@ -63,16 +63,22 @@ body {
     backdrop-filter: blur(20px);
     -webkit-backdrop-filter: blur(20px);
     border-bottom: var(--border-glass);
-    padding: 1rem 0;
+    padding: 0.75rem 0;
+    min-height: 100px;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand {
     font-weight: 800;
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     background: var(--primary-gradient);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    line-height: 1;
 }
 
 .nav-link {
@@ -754,4 +760,101 @@ footer {
 
 .cv-summary-card p {
     line-height: 1.6;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN SYSTEM
+   ============================================ */
+
+/* Tablet & Large Mobile */
+@media (max-width: 991px) {
+    .navbar { 
+        min-height: 80px; 
+        padding: 0.5rem 0; 
+    }
+    
+    .navbar-brand img { 
+        height: 50px !important; 
+        margin-right: 0.5rem !important;
+    }
+    
+    .navbar-brand { 
+        font-size: 1.4rem; 
+    }
+
+    #upload-section, 
+    #results-section, 
+    #reviews-section, 
+    #influence-section {
+        padding-top: 120px !important;
+    }
+
+    .hero-title { 
+        font-size: 3rem; 
+    }
+    
+    .glass-card { 
+        padding: 2rem; 
+    }
+}
+
+/* Small Mobile Devices */
+@media (max-width: 767px) {
+    .hero-section {
+        padding-top: 4rem;
+    }
+
+    .hero-title { 
+        font-size: 2.25rem; 
+        margin-bottom: 1rem;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem;
+    }
+
+    #upload-section, 
+    #results-section, 
+    #reviews-section, 
+    #influence-section {
+        padding-top: 100px !important;
+    }
+
+    .glass-card { 
+        padding: 1.5rem; 
+        border-radius: 16px;
+    }
+
+    .upload-zone { 
+        padding: 2.5rem 1rem; 
+    }
+
+    .upload-icon {
+        font-size: 2.5rem;
+    }
+
+    .btn-lg {
+        padding: 0.75rem 2rem;
+        font-size: 1rem;
+    }
+
+    /* Stack grid items more cleanly */
+    .row.g-5 {
+        --bs-gutter-y: 2rem;
+    }
+}
+
+/* Extra Small Devices */
+@media (max-width: 480px) {
+    .navbar-brand { 
+        font-size: 1.1rem; 
+    }
+    
+    .navbar-brand img { 
+        height: 40px !important; 
+    }
+
+    .hero-title { 
+        font-size: 1.8rem; 
+    }
 }

@@ -155,8 +155,18 @@ function renderResults(results) {
                 <div id="details-${res.id}" class="mt-4 pt-4 border-top" style="display: none;">
                     <p class="text-muted small mb-3">${res.summary}</p>
                     <div class="row g-3">
-                        <div class="col-6"><h6 class="fw-bold text-success mb-2 small">Aligned Skills</h6><div class="d-flex flex-wrap gap-1">${res.skills.matched.map(s => `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.65rem;">${s}</span>`).join('') || 'None'}</div></div>
-                        <div class="col-6"><h6 class="fw-bold text-danger mb-2 small">Skill Gaps</h6><div class="d-flex flex-wrap gap-1">${res.skills.missing.map(s => `<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.65rem;">${s}</span>`).join('') || 'None'}</div></div>
+                        <div class="col-6"><h6 class="fw-bold text-success mb-2 small"><i class="bi bi-patch-check-fill me-1"></i>Aligned Skills</h6><div class="d-flex flex-wrap gap-1">${(res.skills.matched || []).map(s => `<span class="badge bg-success bg-opacity-10 text-success border border-success border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.65rem;">${s}</span>`).join('') || '<span class="text-muted small">None</span>'}</div></div>
+                        <div class="col-6"><h6 class="fw-bold text-danger mb-2 small"><i class="bi bi-patch-exclamation-fill me-1"></i>Skill Gaps</h6><div class="d-flex flex-wrap gap-1">${(res.skills.missing || []).map(s => `<span class="badge bg-danger bg-opacity-10 text-danger border border-danger border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.65rem;">${s}</span>`).join('') || '<span class="text-muted small">None</span>'}</div></div>
+                    </div>
+                    <div class="row g-3 mt-2 pt-3 border-top border-light">
+                        <div class="col-6 border-end">
+                            <h6 class="fw-bold text-primary mb-2 small"><i class="bi bi-file-earmark-person-fill me-1"></i>CV Skills (Mentioned)</h6>
+                            <div class="d-flex flex-wrap gap-1">${(res.skills.cv_skills || []).map(s => `<span class="badge bg-primary bg-opacity-10 text-primary border border-primary border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.65rem;">${s}</span>`).join('') || '<span class="text-muted small">None</span>'}</div>
+                        </div>
+                        <div class="col-6">
+                            <h6 class="fw-bold text-dark mb-2 small"><i class="bi bi-briefcase-fill me-1"></i>JD Skills (Required)</h6>
+                            <div class="d-flex flex-wrap gap-1">${(res.skills.jd_skills || []).map(s => `<span class="badge bg-dark bg-opacity-10 text-dark border border-dark border-opacity-25 px-2 py-1 rounded-pill" style="font-size: 0.65rem;">${s}</span>`).join('') || '<span class="text-muted small">None</span>'}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -169,7 +179,12 @@ function renderResults(results) {
 
 window.toggleDetails = (id) => {
     const el = document.getElementById(id);
-    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+    if (el) {
+        el.style.display = el.style.display === 'none' ? 'block' : 'none';
+        if (el.style.display === 'block') {
+            el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
 };
 
 // Handle Form Submission
